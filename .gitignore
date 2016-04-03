@@ -12,4 +12,4 @@ node_modules
 /log/*
 !/log/.keep
 /tmp
-.DS_*
+.DS_Store
