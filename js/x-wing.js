@@ -1,5 +1,8 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+// needs to move somewhere
+var background = new Image();
+background.src = "images/starscape.png";
 
 var x = canvas.width/2;
 var y = canvas.height/2;
@@ -127,7 +130,9 @@ function keyUpHandler(e) {
 }
 
 function draw() {
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // ctx.drawImage(background);
   drawXwing();
   if (rightPressed && upPressed && y > 0 && x < 700){
     x -= dxLeft;
