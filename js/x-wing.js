@@ -24,13 +24,17 @@ var dxCrosshairs = 0;
 var dyCrosshairs = 0;
 
 function FireLazers(pos){
+  if (leftPressed){
+    this.left = true;
+  }
+  if (rightPressed){
+    this.right = true;
+  }
   this.position = pos;
-  var x2 = pos[0] + 100;
-  this.destinationX = pos[0] - 50;
   this.m = 25;
   this.b = 0;
-  this.posX2 = x2;
-  this.posX1 = this.position[0] ;
+  this.posX2 = pos[0] + 100;
+  this.posX1 = pos[0] ;
   this.radius = 5;
 }
 
@@ -49,8 +53,18 @@ FireLazers.prototype.draw = function(){
 };
 
 FireLazers.prototype.moveLazers = function(){
-  this.posX1 = this.posX1 + this.m;
-  this.posX2 = this.posX2 - this.m;
+  if (this.left){
+    this.posX1 = this.posX1 -  1.8 * this.m;
+    this.posX2 = this.posX2 - 4 * this.m;
+  }
+  else if (this.right) {
+    this.posX1 = this.posX1 + 4 * this.m;
+    this.posX2 = this.posX2 + 1.8 * this.m;
+  }
+  else {
+    this.posX1 = this.posX1 + this.m;
+    this.posX2 = this.posX2 - this.m;
+  }
   this.m = this.m * 0.35;
   this.radius = this.radius * 0.95;
 
