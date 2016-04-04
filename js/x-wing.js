@@ -1,8 +1,9 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 // needs to move somewhere
-var background = new Image();
-background.src = "images/starscape.png";
+
+var deathstar = new Image();
+deathstar.src = "images/deathstar.png";
 
 var x = canvas.width/2;
 var y = canvas.height/2;
@@ -15,6 +16,30 @@ var downPressed = false;
 var upPressed = false;
 var fire = false;
 var fireTicker = 0;
+var deathSize = 25;
+var dxCrosshairs = 0;
+var dyCrosshairs = 0;
+
+
+function drawCrosshairs (){
+  var crossX = x + 11;
+  var crossY = y - 5;
+  ctx.drawImage(
+    crosshairs,        // the image of the sprite sheet
+                  // source coordinates      (x,y,w,h)
+     crossX + dxCrosshairs ,crossY + dyCrosshairs,80, 80
+   );
+}
+
+
+function drawDeathstar(){
+  ctx.drawImage(
+    deathstar,        // the image of the sprite sheet
+                  // source coordinates      (x,y,w,h)
+     10,10,deathSize, deathSize  // destination coordinates (x,y,w,h)
+   );
+   deathSize  += 0.01;
+}
 
 function drawXwing() {
   var xWing;
@@ -22,25 +47,36 @@ function drawXwing() {
     xWing = xWing7;
   }
   else if (leftPressed && upPressed && x > 0 && y > 0){
+    dyCrosshairs = -40;
+    dxCrosshairs = -20;
     xWing = xWing4;
   }
   else if (rightPressed && downPressed && x < 700 && y < 440){
+    dyCrosshairs = 30;
     xWing = xWing6;
   }
   else if (leftPressed && downPressed && x > 0 && y < 440){
+    dxCrosshairs = -20;
+    dyCrosshairs = 30;
     xWing = xWing8;
   }
   else if (rightPressed && upPressed && x < 700 && y > 0){
+    dyCrosshairs = -40;
+    dxCrosshairs = 20;
     xWing = xWing9;
   }
   else if (leftPressed && x > 0){
+    dxCrosshairs = -20;
     xWing = xWing10;
   }
   else if (rightPressed && x < 700){
+    dxCrosshairs = 20;
     xWing = xWing5;
   } else if (downPressed && y < 440 ) {
+    dyCrosshairs = 30;
     xWing = xWing1;
   } else if (upPressed && y > 0) {
+    dyCrosshairs = -40;
     xWing = xWing2;
   }
   else {
@@ -57,7 +93,6 @@ function drawXwing() {
 
 function keyPressedHandler(e){
   if (e.keyCode === 32){
-    console.log("fire");
     fire = true;
     fireTicker = 0;
   }
@@ -133,6 +168,8 @@ function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // ctx.drawImage(background);
+  drawDeathstar();
+  drawCrosshairs();
   drawXwing();
   if (rightPressed && upPressed && y > 0 && x < 700){
     x -= dxLeft;
@@ -163,8 +200,21 @@ function draw() {
   if (fireTicker > 3) {
     fire = false;
   }
+  if (dyCrosshairs > 0){
+    dyCrosshairs -= 2;
+  } else if (dyCrosshairs < 0) {
+    dyCrosshairs += 2;
+  }
+  if (dxCrosshairs > 0){
+    dxCrosshairs -= 2;
+  } else if (dxCrosshairs < 0) {
+    dxCrosshairs += 2;
+  }
 
 }
+
+var crosshairs = new Image();
+crosshairs.src = "images/crosshairs.png";
 
 var xWing0 = new Image();
 xWing0.src = "images/x-wing/0.png";
