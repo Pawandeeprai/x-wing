@@ -30,23 +30,29 @@ function FireLazers(pos){
   if (rightPressed){
     this.right = true;
   }
-  this.position = pos;
+  if (upPressed){
+    this.up = true;
+  }
+  if (downPressed){
+    this.down = true;
+  }
   this.m = 25;
   this.b = 0;
   this.posX2 = pos[0] + 100;
   this.posX1 = pos[0] ;
+  this.posY = pos[1];
   this.radius = 5;
 }
 
 FireLazers.prototype.draw = function(){
   ctx.beginPath();
-  ctx.arc(this.posX1 , this.position[1], this.radius, 0, Math.PI*2, false);
+  ctx.arc(this.posX1 , this.posY, this.radius, 0, Math.PI*2, false);
   ctx.fillStyle = "red";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.arc(this.posX2, this.position[1], this.radius, 0, Math.PI*2, false);
+  ctx.arc(this.posX2, this.posY, this.radius, 0, Math.PI*2, false);
   ctx.fillStyle = "red";
   ctx.fill();
   ctx.closePath();
@@ -54,12 +60,12 @@ FireLazers.prototype.draw = function(){
 
 FireLazers.prototype.moveLazers = function(){
   if (this.left){
-    this.posX1 = this.posX1 -  1.8 * this.m;
-    this.posX2 = this.posX2 - 4 * this.m;
+    this.posX1 = this.posX1 -  1.5 * this.m;
+    this.posX2 = this.posX2 - 3.5 * this.m;
   }
   else if (this.right) {
-    this.posX1 = this.posX1 + 4 * this.m;
-    this.posX2 = this.posX2 + 1.8 * this.m;
+    this.posX1 = this.posX1 + 3.5 * this.m;
+    this.posX2 = this.posX2 + 1.5 * this.m;
   }
   else {
     this.posX1 = this.posX1 + this.m;
@@ -67,6 +73,15 @@ FireLazers.prototype.moveLazers = function(){
   }
   this.m = this.m * 0.35;
   this.radius = this.radius * 0.95;
+  if (this.up){
+    this.posY = this.posY - this.m;
+  }
+  else if (this.down) {
+    this.posY = this.posY + this.m * 5;
+  }
+  else{
+    this.posY = this.posY + this.m * 0.5;
+  }
 
 };
 var lazers = [];
@@ -193,12 +208,12 @@ function draw() {
   // ctx.drawImage(background);
   drawDeathstar();
   drawCrosshairs();
-  drawXwing();
-  handleInput();
   lazers.forEach(function(laser){
     laser.draw();
     laser.moveLazers();
   });
+  drawXwing();
+  handleInput();
 
 
 }
