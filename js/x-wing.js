@@ -1,6 +1,6 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-// var TieFighter = require('./tiefigther');
+// var TieFighter = require('./tiefighter');
 // needs to move somewhere
 
 var deathstar = new Image();
@@ -43,6 +43,9 @@ function FireLazers(pos){
   this.posY = pos[1];
   this.radius = 5;
 }
+FireLazers.prototype.location = function(){
+  return [this.posX1, this.posY1];
+};
 
 FireLazers.prototype.draw = function(){
   ctx.beginPath();

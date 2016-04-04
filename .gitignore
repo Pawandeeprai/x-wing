@@ -13,3 +13,4 @@ node_modules
 !/log/.keep
 /tmp
 .DS_Store
+.bundle.js
