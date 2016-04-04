@@ -1,10 +1,12 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+// var TieFighter = require('./tiefigther');
 // needs to move somewhere
 
 var deathstar = new Image();
 deathstar.src = "images/deathstar.png";
-
+var X_BOUND = 700;
+var Y_BOUND = 440;
 var x = canvas.width/2;
 var y = canvas.height/2;
 var dxRight = 2;
@@ -17,13 +19,54 @@ var upPressed = false;
 var fire = false;
 var fireTicker = 0;
 var deathSize = 25;
+
 var dxCrosshairs = 0;
 var dyCrosshairs = 0;
 
+function FireLazers(pos){
+  this.position = pos;
+  var x2 = pos[0] + 100;
+  this.destinationX = pos[0] - 50;
+  this.m = 25;
+  this.b = 0;
+  this.posX2 = x2;
+  this.posX1 = this.position[0] ;
+  this.radius = 5;
+}
 
+FireLazers.prototype.draw = function(){
+  ctx.beginPath();
+  ctx.arc(this.posX1 , this.position[1], this.radius, 0, Math.PI*2, false);
+  ctx.fillStyle = "red";
+  ctx.fill();
+  ctx.closePath();
+
+  ctx.beginPath();
+  ctx.arc(this.posX2, this.position[1], this.radius, 0, Math.PI*2, false);
+  ctx.fillStyle = "red";
+  ctx.fill();
+  ctx.closePath();
+};
+
+FireLazers.prototype.moveLazers = function(){
+  this.posX1 = this.posX1 + this.m;
+  this.posX2 = this.posX2 - this.m;
+  this.m = this.m * 0.35;
+  this.radius = this.radius * 0.95;
+
+};
+var lazers = [];
+var crosshair = new CrossHairs(x,y);
+var lazer = new FireLazers([x,y]);
+
+//TODO: make Crosshairs class
+function CrossHairs(posX, posY)  {
+  this.crossX = posX + 11;
+  this.crossY = posY - 10;
+}
 function drawCrosshairs (){
   var crossX = x + 11;
-  var crossY = y - 5;
+  var crossY = y - 10;
   ctx.drawImage(
     crosshairs,        // the image of the sprite sheet
                   // source coordinates      (x,y,w,h)
@@ -31,52 +74,50 @@ function drawCrosshairs (){
    );
 }
 
-
+//TODO: make DeathStar class
 function drawDeathstar(){
   ctx.drawImage(
     deathstar,        // the image of the sprite sheet
                   // source coordinates      (x,y,w,h)
      10,10,deathSize, deathSize  // destination coordinates (x,y,w,h)
    );
-   deathSize  += 0.01;
+
 }
 
 function drawXwing() {
   var xWing;
-  if (fire){
-    xWing = xWing7;
-  }
-  else if (leftPressed && upPressed && x > 0 && y > 0){
-    dyCrosshairs = -40;
-    dxCrosshairs = -20;
+  if (leftPressed && upPressed && x > 0 && y > 0){
+    dyCrosshairs = -30;
+    dxCrosshairs = -30;
     xWing = xWing4;
   }
-  else if (rightPressed && downPressed && x < 700 && y < 440){
+  else if (rightPressed && downPressed && x < X_BOUND && y < Y_BOUND){
     dyCrosshairs = 30;
+    dxCrosshairs = 30;
     xWing = xWing6;
   }
-  else if (leftPressed && downPressed && x > 0 && y < 440){
-    dxCrosshairs = -20;
+  else if (leftPressed && downPressed && x > 0 && y < Y_BOUND){
+    dxCrosshairs = -30;
     dyCrosshairs = 30;
     xWing = xWing8;
   }
-  else if (rightPressed && upPressed && x < 700 && y > 0){
+  else if (rightPressed && upPressed && x < X_BOUND && y > 0){
     dyCrosshairs = -40;
-    dxCrosshairs = 20;
+    dxCrosshairs = 40;
     xWing = xWing9;
   }
   else if (leftPressed && x > 0){
-    dxCrosshairs = -20;
+    dxCrosshairs = -30;
     xWing = xWing10;
   }
-  else if (rightPressed && x < 700){
-    dxCrosshairs = 20;
+  else if (rightPressed && x < X_BOUND){
+    dxCrosshairs = 30;
     xWing = xWing5;
-  } else if (downPressed && y < 440 ) {
+  } else if (downPressed && y < Y_BOUND ) {
     dyCrosshairs = 30;
     xWing = xWing1;
   } else if (upPressed && y > 0) {
-    dyCrosshairs = -40;
+    dyCrosshairs = -30;
     xWing = xWing2;
   }
   else {
@@ -90,78 +131,46 @@ function drawXwing() {
    );
 
 }
-
+// TODO: make KeyHandler class
 function keyPressedHandler(e){
   if (e.keyCode === 32){
-    fire = true;
-    fireTicker = 0;
+    lazers.push(new FireLazers([x,y], [crosshair.crossX, crosshair.crossY]));
   }
 }
 
 function keyDownHandler(e) {
-  // upright
-  if(e.keyCode === 39 && e.keyCode === 38 ) {
-    rightPressed = true;
-    upPressed = true;
-  }
-  // upleft
-  else if(e.keyCode === 37 && e.keyCode === 38) {
-      leftPressed = true;
-      upPressed = true;
-  }
-  // downleft
-  else if(e.keyCode === 37 && e.keyCode === 40) {
-      leftPressed = true;
-      downPressed = true;
-  }
-  // downright
-  else if(e.keyCode === 39 && e.keyCode === 40) {
-      rightPressed = true;
-      downPressed = true;
-  }
-  else if(e.keyCode === 39 ) {
+  if(e.keyCode === 39 ) {
     rightPressed = true;
   }
-  else if(e.keyCode === 37 ) {
+  if(e.keyCode === 37 ) {
     leftPressed = true;
   }
-  else if (e.keyCode === 40) {
+  if (e.keyCode === 40) {
     downPressed = true;
   }
-  else if (e.keyCode === 38) {
+  if (e.keyCode === 38) {
     upPressed = true;
   }
 }
 
 function keyUpHandler(e) {
-  if(e.keyCode === 39 && e.keyCode === 38 ) {
-    rightPressed = false;
-    upPressed = false;
-  }
-  else if(e.keyCode === 37 && e.keyCode === 38) {
-      leftPressed = false;
-      upPressed = false;
-  }
-  else if(e.keyCode === 37 && e.keyCode === 40) {
-      leftPressed = false;
-      downPressed = false;
-  }
-  else if(e.keyCode === 39 && e.keyCode === 40) {
-      rightPressed = false;
-      downPressed = false;
-  }
-  else if(e.keyCode === 39) {
+  if(e.keyCode === 39) {
       rightPressed = false;
   }
-  else if(e.keyCode === 37) {
+  if(e.keyCode === 37) {
       leftPressed = false;
   }
-  else if (e.keyCode === 40) {
+  if (e.keyCode === 40) {
     downPressed = false;
   }
-  else if (e.keyCode === 38) {
+  if (e.keyCode === 38) {
     upPressed = false;
   }
+}
+
+function step() {
+  deathSize  += 0.01;
+  draw();
 }
 
 function draw() {
@@ -171,7 +180,17 @@ function draw() {
   drawDeathstar();
   drawCrosshairs();
   drawXwing();
-  if (rightPressed && upPressed && y > 0 && x < 700){
+  handleInput();
+  lazers.forEach(function(laser){
+    laser.draw();
+    laser.moveLazers();
+  });
+
+
+}
+
+function handleInput() {
+  if (rightPressed && upPressed && y > 0 && x < X_BOUND){
     x -= dxLeft;
     y -= dy;
   }
@@ -179,27 +198,24 @@ function draw() {
     x += dxLeft;
     y -= dy;
   }
-  else if (leftPressed && downPressed && y < 440 && x > 0){
+  else if (leftPressed && downPressed && y < Y_BOUND && x > 0){
     x += dxLeft;
     y += dy;
   }
-  else if (rightPressed && downPressed && y < 440 && x < 700){
+  else if (rightPressed && downPressed && y < Y_BOUND && x < X_BOUND){
     x -= dxLeft;
     y += dy;
   }
-  else if (rightPressed && x < 700){
+  else if (rightPressed && x < X_BOUND){
     x -= dxLeft;
   } else if (leftPressed && x > 0) {
     x += dxLeft;
-  } else if (downPressed && y < 440) {
+  } else if (downPressed && y < Y_BOUND) {
     y += dy;
   } else if (upPressed && y > 0) {
     y -= dy;
   }
-  fireTicker += 1;
-  if (fireTicker > 3) {
-    fire = false;
-  }
+
   if (dyCrosshairs > 0){
     dyCrosshairs -= 2;
   } else if (dyCrosshairs < 0) {
@@ -210,7 +226,6 @@ function draw() {
   } else if (dxCrosshairs < 0) {
     dxCrosshairs += 2;
   }
-
 }
 
 var crosshairs = new Image();
@@ -243,4 +258,4 @@ document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keypress", keyPressedHandler, false);
 
 
-setInterval(draw, 10);
+setInterval(step, 10);
