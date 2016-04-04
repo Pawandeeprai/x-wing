@@ -5,8 +5,8 @@ var ctx = canvas.getContext("2d");
 
 var deathstar = new Image();
 deathstar.src = "images/deathstar.png";
-var X_BOUND = 700;
-var Y_BOUND = 440;
+var X_BOUND = 600;
+var Y_BOUND = 380;
 var x = canvas.width/2;
 var y = canvas.height/2;
 var dxRight = 2;
@@ -36,9 +36,9 @@ function FireLazers(pos){
   if (downPressed){
     this.down = true;
   }
-  this.m = 25;
+  this.m = 55;
   this.b = 0;
-  this.posX2 = pos[0] + 100;
+  this.posX2 = pos[0] + 200;
   this.posX1 = pos[0] ;
   this.posY = pos[1];
   this.radius = 5;
@@ -60,12 +60,12 @@ FireLazers.prototype.draw = function(){
 
 FireLazers.prototype.moveLazers = function(){
   if (this.left){
-    this.posX1 = this.posX1 -  1.5 * this.m;
-    this.posX2 = this.posX2 - 3.5 * this.m;
+    this.posX1 = this.posX1 -  0.25 * this.m;
+    this.posX2 = this.posX2 - 2.5 * this.m;
   }
   else if (this.right) {
-    this.posX1 = this.posX1 + 3.5 * this.m;
-    this.posX2 = this.posX2 + 1.5 * this.m;
+    this.posX1 = this.posX1 + 2.5 * this.m;
+    this.posX2 = this.posX2 + 0.25 * this.m;
   }
   else {
     this.posX1 = this.posX1 + this.m;
@@ -80,7 +80,7 @@ FireLazers.prototype.moveLazers = function(){
     this.posY = this.posY + this.m * 5;
   }
   else{
-    this.posY = this.posY + this.m * 0.5;
+    this.posY = this.posY + this.m * 1.2;
   }
 
 };
@@ -94,12 +94,12 @@ function CrossHairs(posX, posY)  {
   this.crossY = posY - 10;
 }
 function drawCrosshairs (){
-  var crossX = x + 11;
-  var crossY = y - 10;
+  var crossX = x + 48;
+  var crossY = y + 5;
   ctx.drawImage(
     crosshairs,        // the image of the sprite sheet
                   // source coordinates      (x,y,w,h)
-     crossX + dxCrosshairs ,crossY + dyCrosshairs,80, 80
+     crossX + dxCrosshairs ,crossY + dyCrosshairs,100, 100
    );
 }
 
@@ -116,37 +116,37 @@ function drawDeathstar(){
 function drawXwing() {
   var xWing;
   if (leftPressed && upPressed && x > 0 && y > 0){
-    dyCrosshairs = -30;
-    dxCrosshairs = -30;
+    dyCrosshairs = -50;
+    dxCrosshairs = -50;
     xWing = xWing4;
   }
   else if (rightPressed && downPressed && x < X_BOUND && y < Y_BOUND){
-    dyCrosshairs = 30;
-    dxCrosshairs = 30;
+    dyCrosshairs = 50;
+    dxCrosshairs = 50;
     xWing = xWing6;
   }
   else if (leftPressed && downPressed && x > 0 && y < Y_BOUND){
-    dxCrosshairs = -30;
-    dyCrosshairs = 30;
+    dxCrosshairs = -50;
+    dyCrosshairs = 50;
     xWing = xWing8;
   }
   else if (rightPressed && upPressed && x < X_BOUND && y > 0){
-    dyCrosshairs = -40;
-    dxCrosshairs = 40;
+    dyCrosshairs = -50;
+    dxCrosshairs = 50;
     xWing = xWing9;
   }
   else if (leftPressed && x > 0){
-    dxCrosshairs = -30;
+    dxCrosshairs = -50;
     xWing = xWing10;
   }
   else if (rightPressed && x < X_BOUND){
-    dxCrosshairs = 30;
+    dxCrosshairs = 50;
     xWing = xWing5;
   } else if (downPressed && y < Y_BOUND ) {
-    dyCrosshairs = 30;
+    dyCrosshairs = 50;
     xWing = xWing1;
   } else if (upPressed && y > 0) {
-    dyCrosshairs = -30;
+    dyCrosshairs = -50;
     xWing = xWing2;
   }
   else {
@@ -156,7 +156,7 @@ function drawXwing() {
   ctx.drawImage(
     xWing,        // the image of the sprite sheet
                   // source coordinates      (x,y,w,h)
-     x,y,100, 60  // destination coordinates (x,y,w,h)
+     x,y,200, 120  // destination coordinates (x,y,w,h)
    );
 
 }
@@ -207,11 +207,11 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // ctx.drawImage(background);
   drawDeathstar();
-  drawCrosshairs();
   lazers.forEach(function(laser){
     laser.draw();
     laser.moveLazers();
   });
+  drawCrosshairs();
   drawXwing();
   handleInput();
 
