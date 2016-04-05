@@ -60,7 +60,6 @@
 	var Y_BOUND = 380;
 	var x = canvas.width/2;
 	var y = canvas.height/2;
-	var dxRight = 2;
 	var dxLeft = -3;
 	var dy = 3;
 	var rightPressed = false;
@@ -343,7 +342,7 @@
 	};
 	TieFighter.prototype.grow = function(){
 	  this.distance += this.m;
-	  this.m *= 1.01;
+	  this.m *= 1.001;
 	};
 
 	TieFighter.prototype.location = function(){
@@ -480,9 +479,10 @@
 	  var posY = this.posY + 30;
 
 	  allFighters.forEach(function(fighter){
-	    if (posX > fighter.position[0] && posX < fighter.position[0] + fighter.distance
-	        && posY > fighter.position[1] && posY < fighter.position[1] + fighter.distance){
+	    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100
+	        ){
 	      // then this is a hit
+	      if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
 	      fighter.hit = true;
 	    }
 	  });

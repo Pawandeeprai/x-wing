@@ -14,7 +14,6 @@ var X_BOUND = 600;
 var Y_BOUND = 380;
 var x = canvas.width/2;
 var y = canvas.height/2;
-var dxRight = 2;
 var dxLeft = -3;
 var dy = 3;
 var rightPressed = false;

@@ -68,9 +68,10 @@ FireLazers.prototype.hit = function(allFighters){
   var posY = this.posY + 30;
 
   allFighters.forEach(function(fighter){
-    if (posX > fighter.position[0] && posX < fighter.position[0] + fighter.distance
-        && posY > fighter.position[1] && posY < fighter.position[1] + fighter.distance){
+    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100
+        ){
       // then this is a hit
+      if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
       fighter.hit = true;
     }
   });

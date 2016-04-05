@@ -19,7 +19,7 @@ TieFighter.prototype.draw = function(ctx){
 };
 TieFighter.prototype.grow = function(){
   this.distance += this.m;
-  this.m *= 1.01;
+  this.m *= 1.001;
 };
 
 TieFighter.prototype.location = function(){
