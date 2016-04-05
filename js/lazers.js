@@ -70,7 +70,6 @@ FireLazers.prototype.hit = function(allFighters){
   allFighters.forEach(function(fighter){
     if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100
         ){
-      // then this is a hit
       if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
       fighter.hit = true;
     }

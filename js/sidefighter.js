@@ -14,13 +14,13 @@ function SideFighter(left){
 }
 
 SideFighter.prototype.draw = function(ctx){
-  if (this.left){
+  if (this.left && this.hit !== true){
     ctx.drawImage(
       this.tieFighterImg,
       140,0, 50, 100,
       this.posX,this.posY, this.distance - 10, this.distance + 10
     );
-  } else {
+  } else if (this.hit !== true) {
     ctx.drawImage(
       this.tieFighterImg,
       140,0, 50, 100,
