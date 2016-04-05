@@ -15,8 +15,8 @@ var Y_BOUND = 380;
 var x = canvas.width/2;
 var y = canvas.height/2;
 var dxRight = 2;
-var dxLeft = -2;
-var dy = 2;
+var dxLeft = -3;
+var dy = 3;
 var rightPressed = false;
 var leftPressed = false;
 var downPressed = false;
@@ -160,9 +160,9 @@ function draw() {
   lazers.forEach(function(laser){
     laser.draw(ctx);
     laser.moveLazers();
+    laser.hit(forwardFighters.concat(sideFighters));
   });
   forwardFighters.forEach(function(tiefighter){
-    console.log(tiefighter.position);
     if (tiefighter.distance < 140) {
       tiefighter.draw(ctx);
     }
@@ -227,6 +227,10 @@ function handleInput() {
   }
   if (sideFighters.length > 10){
     sideFighters.splice(0,5);
+  }
+
+  if (lazers.length > 5){
+    lazers = [];
   }
 
   if (forwardFighters.length > 10){

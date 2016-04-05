@@ -63,4 +63,18 @@ FireLazers.prototype.moveLazers = function(){
 
 };
 
+FireLazers.prototype.hit = function(allFighters){
+  var posX = this.posX1 + 100;
+  var posY = this.posY + 30;
+
+  allFighters.forEach(function(fighter){
+    if (posX > fighter.position[0] && posX < fighter.position[0] + fighter.distance
+        && posY > fighter.position[1] && posY < fighter.position[1] + fighter.distance){
+      // then this is a hit
+      fighter.hit = true;
+    }
+  });
+
+};
+
 module.exports = FireLazers;

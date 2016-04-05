@@ -5,13 +5,16 @@ function TieFighter(position){
   this.position = tiePos[Math.floor(Math.random() * 6)];
   this.distance = 5;
   this.m = 0.25;
+  this.hit = false;
 }
 
 TieFighter.prototype.draw = function(ctx){
-  ctx.drawImage(
-    this.tieFighterImg,
-    this.position[0],this.position[1], this.distance, this.distance
-  );
+  if (this.hit !== true){
+    ctx.drawImage(
+      this.tieFighterImg,
+      this.position[0],this.position[1], this.distance, this.distance
+    );
+  }
 
 };
 TieFighter.prototype.grow = function(){

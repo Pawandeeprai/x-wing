@@ -1,4 +1,5 @@
 function SideFighter(left){
+  this.hit = false;
   this.tieFighterImg = new Image();
   this.tieFighterImg.src = "images/tie/side.png";
   this.left = left;
@@ -9,7 +10,7 @@ function SideFighter(left){
   } else {
     this.posX = 710;
   }
-
+  this.position = [this.posX, this.posY];
 }
 
 SideFighter.prototype.draw = function(ctx){

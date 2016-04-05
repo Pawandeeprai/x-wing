@@ -61,8 +61,8 @@
 	var x = canvas.width/2;
 	var y = canvas.height/2;
 	var dxRight = 2;
-	var dxLeft = -2;
-	var dy = 2;
+	var dxLeft = -3;
+	var dy = 3;
 	var rightPressed = false;
 	var leftPressed = false;
 	var downPressed = false;
@@ -206,9 +206,9 @@
 	  lazers.forEach(function(laser){
 	    laser.draw(ctx);
 	    laser.moveLazers();
+	    laser.hit(forwardFighters.concat(sideFighters));
 	  });
 	  forwardFighters.forEach(function(tiefighter){
-	    console.log(tiefighter.position);
 	    if (tiefighter.distance < 140) {
 	      tiefighter.draw(ctx);
 	    }
@@ -275,6 +275,10 @@
 	    sideFighters.splice(0,5);
 	  }
 
+	  if (lazers.length > 5){
+	    lazers = [];
+	  }
+
 	  if (forwardFighters.length > 10){
 	    forwardFighters.splice(0,1);
 	  }
@@ -325,13 +329,16 @@
 	  this.position = tiePos[Math.floor(Math.random() * 6)];
 	  this.distance = 5;
 	  this.m = 0.25;
+	  this.hit = false;
 	}
 
 	TieFighter.prototype.draw = function(ctx){
-	  ctx.drawImage(
-	    this.tieFighterImg,
-	    this.position[0],this.position[1], this.distance, this.distance
-	  );
+	  if (this.hit !== true){
+	    ctx.drawImage(
+	      this.tieFighterImg,
+	      this.position[0],this.position[1], this.distance, this.distance
+	    );
+	  }
 
 	};
 	TieFighter.prototype.grow = function(){
@@ -351,6 +358,7 @@
 /***/ function(module, exports) {
 
 	function SideFighter(left){
+	  this.hit = false;
 	  this.tieFighterImg = new Image();
 	  this.tieFighterImg.src = "images/tie/side.png";
 	  this.left = left;
@@ -361,7 +369,7 @@
 	  } else {
 	    this.posX = 710;
 	  }
-
+	  this.position = [this.posX, this.posY];
 	}
 
 	SideFighter.prototype.draw = function(ctx){
@@ -464,6 +472,20 @@
 	  else{
 	    this.posY = this.posY + this.m * 1.2;
 	  }
+
+	};
+
+	FireLazers.prototype.hit = function(allFighters){
+	  var posX = this.posX1 + 100;
+	  var posY = this.posY + 30;
+
+	  allFighters.forEach(function(fighter){
+	    if (posX > fighter.position[0] && posX < fighter.position[0] + fighter.distance
+	        && posY > fighter.position[1] && posY < fighter.position[1] + fighter.distance){
+	      // then this is a hit
+	      fighter.hit = true;
+	    }
+	  });
 
 	};
 
