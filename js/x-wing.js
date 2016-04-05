@@ -1,11 +1,12 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var TieFighter = require('./tiefighter');
+var SideFighter = require('./sidefighter');
 // needs to move somewhere
 // NEEDS TO BE IN ANOTHER FILE:
 
-
-var t = new TieFighter("hey");
+// test data
+// end test data
 var deathstar = new Image();
 deathstar.src = "images/deathstar.png";
 var X_BOUND = 600;
@@ -213,19 +214,14 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // ctx.drawImage(background);
   drawDeathstar();
-  if (t.distance < 160) {
-    t.draw(ctx);
-  }
-  t.grow();
+
   lazers.forEach(function(laser){
     laser.draw();
     laser.moveLazers();
   });
   drawCrosshairs();
   drawXwing();
-  if (t.distance > 160 && t.distance < 180) {
-    t.draw(ctx);
-  }
+
   handleInput();
 
 

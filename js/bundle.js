@@ -47,11 +47,12 @@
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	var TieFighter = __webpack_require__(1);
+	var SideFighter = __webpack_require__(2);
 	// needs to move somewhere
 	// NEEDS TO BE IN ANOTHER FILE:
 
-
-	var t = new TieFighter("hey");
+	// test data
+	// end test data
 	var deathstar = new Image();
 	deathstar.src = "images/deathstar.png";
 	var X_BOUND = 600;
@@ -259,19 +260,14 @@
 	  ctx.clearRect(0, 0, canvas.width, canvas.height);
 	  // ctx.drawImage(background);
 	  drawDeathstar();
-	  if (t.distance < 160) {
-	    t.draw(ctx);
-	  }
-	  t.grow();
+
 	  lazers.forEach(function(laser){
 	    laser.draw();
 	    laser.moveLazers();
 	  });
 	  drawCrosshairs();
 	  drawXwing();
-	  if (t.distance > 160 && t.distance < 180) {
-	    t.draw(ctx);
-	  }
+
 	  handleInput();
 
 
@@ -377,6 +373,58 @@
 	};
 
 	module.exports = TieFighter;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	function SideFighter(left){
+	  this.tieFighterImg = new Image();
+	  this.tieFighterImg.src = "images/tie/side.png";
+	  this.left = left;
+	  this.distance = 40;
+	  this.posY = Math.random() * 200;
+	  if (this.left){
+	    this.posX = -10;
+	  } else {
+	    this.posX = 710;
+	  }
+
+	}
+
+	SideFighter.prototype.draw = function(ctx){
+	  if (this.left){
+	    ctx.drawImage(
+	      this.tieFighterImg,
+	      140,0, 50, 100,
+	      this.posX,this.posY, this.distance - 10, this.distance + 10
+	    );
+	  } else {
+	    ctx.drawImage(
+	      this.tieFighterImg,
+	      140,0, 50, 100,
+	      this.posX,this.posY, this.distance - 10, this.distance + 10
+	    );
+	  }
+
+
+	};
+	SideFighter.prototype.grow = function(){
+	  this.distance += 0.005;
+	  if (this.left){
+	    this.posX += 5;
+	  } else {
+	    this.posX -=5;
+	  }
+	  this.posY += 1;
+	};
+
+	SideFighter.prototype.location = function(){
+	  return [this.posX, this.posY];
+	};
+
+	module.exports = SideFighter;
 
 
 /***/ }
