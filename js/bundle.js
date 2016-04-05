@@ -70,12 +70,15 @@
 	var fire = false;
 	var fireTicker = 0;
 	var deathSize = 25;
+	var count = 0;
 
 	var dxCrosshairs = 0;
 	var dyCrosshairs = 0;
 
 
 	var lazers = [];
+	var sideFighters = [];
+	var forwardFighters = [];
 	var crosshair = new CrossHairs(x,y);
 	var lazer = new FireLazers([x,y]);
 
@@ -154,7 +157,9 @@
 	// TODO: make KeyHandler class
 	function keyPressedHandler(e){
 	  if (e.keyCode === 32){
-	    lazers.push(new FireLazers([x,y],  leftPressed, rightPressed, upPressed, downPressed));
+	    lazers.push(
+	      new FireLazers([x,y],  leftPressed, rightPressed, upPressed, downPressed)
+	    );
 	  }
 	}
 
@@ -202,6 +207,17 @@
 	    laser.draw(ctx);
 	    laser.moveLazers();
 	  });
+	  forwardFighters.forEach(function(tiefighter){
+	    console.log(tiefighter.position);
+	    if (tiefighter.distance < 140) {
+	      tiefighter.draw(ctx);
+	    }
+	    tiefighter.grow();
+	  });
+	  sideFighters.forEach(function(tie){
+	    tie.draw(ctx);
+	    tie.grow();
+	  });
 	  drawCrosshairs();
 	  drawXwing();
 
@@ -247,6 +263,22 @@
 	  } else if (dxCrosshairs < 0) {
 	    dxCrosshairs += 2;
 	  }
+	  if (count % 100 === 0 && count % 200 !== 0){
+	    sideFighters.push(new SideFighter(true));
+	  } else if (count % 200 === 0) {
+	    sideFighters.push(new SideFighter(false));
+	  }
+	  if (count % 200 === 0) {
+	    forwardFighters.push(new TieFighter("change me"));
+	  }
+	  if (sideFighters.length > 10){
+	    sideFighters.splice(0,5);
+	  }
+
+	  if (forwardFighters.length > 10){
+	    forwardFighters.splice(0,1);
+	  }
+	  count += 1;
 	}
 
 	var crosshairs = new Image();
@@ -287,22 +319,24 @@
 /***/ function(module, exports) {
 
 	function TieFighter(position){
+	  var tiePos = [[400, 400], [600, 400], [200,400], [400, 50], [600, 50], [200,50]];
 	  this.tieFighterImg = new Image();
 	  this.tieFighterImg.src = "images/tie/0.png";
-	  this.position = position;
+	  this.position = tiePos[Math.floor(Math.random() * 6)];
 	  this.distance = 5;
-
+	  this.m = 0.25;
 	}
 
 	TieFighter.prototype.draw = function(ctx){
 	  ctx.drawImage(
 	    this.tieFighterImg,
-	    200,200, this.distance, this.distance
+	    this.position[0],this.position[1], this.distance, this.distance
 	  );
 
 	};
 	TieFighter.prototype.grow = function(){
-	  this.distance += 0.25;
+	  this.distance += this.m;
+	  this.m *= 1.01;
 	};
 
 	TieFighter.prototype.location = function(){

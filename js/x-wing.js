@@ -24,12 +24,15 @@ var upPressed = false;
 var fire = false;
 var fireTicker = 0;
 var deathSize = 25;
+var count = 0;
 
 var dxCrosshairs = 0;
 var dyCrosshairs = 0;
 
 
 var lazers = [];
+var sideFighters = [];
+var forwardFighters = [];
 var crosshair = new CrossHairs(x,y);
 var lazer = new FireLazers([x,y]);
 
@@ -108,7 +111,9 @@ function drawXwing() {
 // TODO: make KeyHandler class
 function keyPressedHandler(e){
   if (e.keyCode === 32){
-    lazers.push(new FireLazers([x,y],  leftPressed, rightPressed, upPressed, downPressed));
+    lazers.push(
+      new FireLazers([x,y],  leftPressed, rightPressed, upPressed, downPressed)
+    );
   }
 }
 
@@ -156,6 +161,17 @@ function draw() {
     laser.draw(ctx);
     laser.moveLazers();
   });
+  forwardFighters.forEach(function(tiefighter){
+    console.log(tiefighter.position);
+    if (tiefighter.distance < 140) {
+      tiefighter.draw(ctx);
+    }
+    tiefighter.grow();
+  });
+  sideFighters.forEach(function(tie){
+    tie.draw(ctx);
+    tie.grow();
+  });
   drawCrosshairs();
   drawXwing();
 
@@ -201,6 +217,22 @@ function handleInput() {
   } else if (dxCrosshairs < 0) {
     dxCrosshairs += 2;
   }
+  if (count % 100 === 0 && count % 200 !== 0){
+    sideFighters.push(new SideFighter(true));
+  } else if (count % 200 === 0) {
+    sideFighters.push(new SideFighter(false));
+  }
+  if (count % 200 === 0) {
+    forwardFighters.push(new TieFighter("change me"));
+  }
+  if (sideFighters.length > 10){
+    sideFighters.splice(0,5);
+  }
+
+  if (forwardFighters.length > 10){
+    forwardFighters.splice(0,1);
+  }
+  count += 1;
 }
 
 var crosshairs = new Image();
