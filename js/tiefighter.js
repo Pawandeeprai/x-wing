@@ -14,12 +14,11 @@ TieFighter.prototype.draw = function(ctx){
 
 };
 TieFighter.prototype.grow = function(){
-  this.distance += 1;
+  this.distance += 0.25;
 };
 
 TieFighter.prototype.location = function(){
   return this.position;
 };
-
 
 module.exports = TieFighter;
