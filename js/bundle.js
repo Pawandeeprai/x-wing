@@ -56,6 +56,9 @@
 	// end test data
 	var deathstar = new Image();
 	deathstar.src = "images/deathstar.png";
+	var gameOver = false;
+	var gameOverImg = new Image();
+	gameOverImg.src = "images/gameover.png";
 	var X_BOUND = 600;
 	var Y_BOUND = 380;
 	var x = canvas.width/2;
@@ -193,8 +196,19 @@
 	}
 
 	function step() {
-	  deathSize  += 0.01;
-	  draw();
+	  deathSize  += .01;
+	  if (deathSize > 200){
+	    gameOver = true;
+	  }
+	  if (gameOver){
+	    ctx.drawImage(
+	      gameOverImg,        // the image of the sprite sheet
+	                    // source coordinates      (x,y,w,h)
+	       0,0,800, 500  // destination coordinates (x,y,w,h)
+	     );
+	  } else{
+	    draw();
+	  }
 	}
 
 	function draw() {
@@ -205,7 +219,7 @@
 	  lazers.forEach(function(laser){
 	    laser.draw(ctx);
 	    laser.moveLazers();
-	    laser.hit(forwardFighters.concat(sideFighters));
+	    laser.hit(forwardFighters, ctx);
 	  });
 	  forwardFighters.forEach(function(tiefighter){
 	    if (tiefighter.distance < 140) {
@@ -409,6 +423,10 @@
 /* 3 */
 /***/ function(module, exports) {
 
+	var score = 0;
+	var explosion = new Image();
+	explosion.src = "images/tie/2.png";
+
 	function FireLazers(pos, leftPressed, rightPressed, upPressed, downPressed){
 	  if (leftPressed){
 	    this.left = true;
@@ -428,6 +446,7 @@
 	  this.posX1 = pos[0] ;
 	  this.posY = pos[1];
 	  this.radius = 5;
+	  this.hits = false;
 	}
 	FireLazers.prototype.location = function(){
 	  return [this.posX1, this.posY1];
@@ -474,14 +493,21 @@
 
 	};
 
-	FireLazers.prototype.hit = function(allFighters){
+	FireLazers.prototype.hit = function(allFighters, ctx){
 	  var posX = this.posX1 + 100;
 	  var posY = this.posY + 30;
-
 	  allFighters.forEach(function(fighter){
-	    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100
-	        ){
+	    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100){
 	      if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
+	      ctx.drawImage(
+	        explosion,        // the image of the sprite sheet
+	        // source coordinates      (x,y,w,h)
+	        fighter.position[0],fighter.position[1],fighter.distance, fighter.distance  // destination coordinates (x,y,w,h)
+	      );
+	      if (fighter.hit === false){
+	        score ++;
+	        console.log(score);
+	      }
 	      fighter.hit = true;
 	    }
 	  });

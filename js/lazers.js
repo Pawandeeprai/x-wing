@@ -1,3 +1,7 @@
+var score = 0;
+var explosion = new Image();
+explosion.src = "images/tie/2.png";
+
 function FireLazers(pos, leftPressed, rightPressed, upPressed, downPressed){
   if (leftPressed){
     this.left = true;
@@ -17,6 +21,7 @@ function FireLazers(pos, leftPressed, rightPressed, upPressed, downPressed){
   this.posX1 = pos[0] ;
   this.posY = pos[1];
   this.radius = 5;
+  this.hits = false;
 }
 FireLazers.prototype.location = function(){
   return [this.posX1, this.posY1];
@@ -63,14 +68,21 @@ FireLazers.prototype.moveLazers = function(){
 
 };
 
-FireLazers.prototype.hit = function(allFighters){
+FireLazers.prototype.hit = function(allFighters, ctx){
   var posX = this.posX1 + 100;
   var posY = this.posY + 30;
-
   allFighters.forEach(function(fighter){
-    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100
-        ){
+    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100){
       if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
+      ctx.drawImage(
+        explosion,        // the image of the sprite sheet
+        // source coordinates      (x,y,w,h)
+        fighter.position[0],fighter.position[1],fighter.distance, fighter.distance  // destination coordinates (x,y,w,h)
+      );
+      if (fighter.hit === false){
+        score ++;
+        console.log(score);
+      }
       fighter.hit = true;
     }
   });

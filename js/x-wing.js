@@ -10,6 +10,9 @@ var FireLazers = require('./lazers');
 // end test data
 var deathstar = new Image();
 deathstar.src = "images/deathstar.png";
+var gameOver = false;
+var gameOverImg = new Image();
+gameOverImg.src = "images/gameover.png";
 var X_BOUND = 600;
 var Y_BOUND = 380;
 var x = canvas.width/2;
@@ -147,8 +150,19 @@ function keyUpHandler(e) {
 }
 
 function step() {
-  deathSize  += 0.01;
-  draw();
+  deathSize  += .01;
+  if (deathSize > 200){
+    gameOver = true;
+  }
+  if (gameOver){
+    ctx.drawImage(
+      gameOverImg,        // the image of the sprite sheet
+                    // source coordinates      (x,y,w,h)
+       0,0,800, 500  // destination coordinates (x,y,w,h)
+     );
+  } else{
+    draw();
+  }
 }
 
 function draw() {
@@ -159,7 +173,7 @@ function draw() {
   lazers.forEach(function(laser){
     laser.draw(ctx);
     laser.moveLazers();
-    laser.hit(forwardFighters.concat(sideFighters));
+    laser.hit(forwardFighters, ctx);
   });
   forwardFighters.forEach(function(tiefighter){
     if (tiefighter.distance < 140) {
