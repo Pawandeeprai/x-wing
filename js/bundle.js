@@ -221,12 +221,16 @@
 	    laser.moveLazers();
 	    laser.hit(forwardFighters, ctx);
 	  });
-	  forwardFighters.forEach(function(tiefighter){
-	    if (tiefighter.distance < 140) {
-	      tiefighter.draw(ctx);
+	  for (var i = 0; i < forwardFighters.length; i++){
+	    if (forwardFighters[i].distance < 140) {
+	      forwardFighters[i].draw(ctx);
+	      forwardFighters[i].grow();
 	    }
-	    tiefighter.grow();
-	  });
+	    if (forwardFighters[i].hit && forwardFighters[i].count > 100){
+	      forwardFighters.splice(i,1);
+	    }
+	  }
+
 	  sideFighters.forEach(function(tie){
 	    tie.draw(ctx);
 	    tie.grow();
@@ -282,7 +286,7 @@
 	    sideFighters.push(new SideFighter(false));
 	  }
 	  if (count % 200 === 0) {
-	    forwardFighters.push(new TieFighter("change me"));
+	    forwardFighters.push(new TieFighter());
 	  }
 	  if (sideFighters.length > 10){
 	    sideFighters.splice(0,5);
@@ -335,6 +339,9 @@
 /* 1 */
 /***/ function(module, exports) {
 
+	var explosion = new Image();
+	explosion.src = "images/tie/2.png";
+
 	function TieFighter(position){
 	  var tiePos = [[400, 400], [600, 400], [200,400], [400, 50], [600, 50], [200,50]];
 	  this.tieFighterImg = new Image();
@@ -343,12 +350,20 @@
 	  this.distance = 5;
 	  this.m = 0.25;
 	  this.hit = false;
+	  this.count = 0;
 	}
 
 	TieFighter.prototype.draw = function(ctx){
 	  if (this.hit !== true){
 	    ctx.drawImage(
 	      this.tieFighterImg,
+	      this.position[0],this.position[1], this.distance, this.distance
+	    );
+	  } else {
+	    this.count += 1;
+	    ctx.drawImage(
+	      explosion,        // the image of the sprite sheet
+	      // source coordinates      (x,y,w,h)
 	      this.position[0],this.position[1], this.distance, this.distance
 	    );
 	  }
@@ -369,6 +384,9 @@
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
+
+	var explosion = new Image();
+	explosion.src = "images/tie/2.png";
 
 	function SideFighter(left){
 	  this.hit = false;
@@ -398,6 +416,12 @@
 	      140,0, 50, 100,
 	      this.posX,this.posY, this.distance - 10, this.distance + 10
 	    );
+	  } else {
+	    ctx.drawImage(
+	      explosion,        // the image of the sprite sheet
+	      // source coordinates      (x,y,w,h)
+	      this.posX,this.posY, this.distance - 10, this.distance + 10 // destination coordinates (x,y,w,h)
+	    );
 	  }
 
 
@@ -424,8 +448,7 @@
 /***/ function(module, exports) {
 
 	var score = 0;
-	var explosion = new Image();
-	explosion.src = "images/tie/2.png";
+
 
 	function FireLazers(pos, leftPressed, rightPressed, upPressed, downPressed){
 	  if (leftPressed){
@@ -499,16 +522,11 @@
 	  allFighters.forEach(function(fighter){
 	    if (posX >= fighter.position[0] && posX <= fighter.position[0] + 100){
 	      if (posY > fighter.position[1] && posY < fighter.position[1] + 100)
-	      ctx.drawImage(
-	        explosion,        // the image of the sprite sheet
-	        // source coordinates      (x,y,w,h)
-	        fighter.position[0],fighter.position[1],fighter.distance, fighter.distance  // destination coordinates (x,y,w,h)
-	      );
+	      fighter.hit = true;
 	      if (fighter.hit === false){
 	        score ++;
 	        console.log(score);
 	      }
-	      fighter.hit = true;
 	    }
 	  });
 

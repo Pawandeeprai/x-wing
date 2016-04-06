@@ -175,12 +175,16 @@ function draw() {
     laser.moveLazers();
     laser.hit(forwardFighters, ctx);
   });
-  forwardFighters.forEach(function(tiefighter){
-    if (tiefighter.distance < 140) {
-      tiefighter.draw(ctx);
+  for (var i = 0; i < forwardFighters.length; i++){
+    if (forwardFighters[i].distance < 140) {
+      forwardFighters[i].draw(ctx);
+      forwardFighters[i].grow();
     }
-    tiefighter.grow();
-  });
+    if (forwardFighters[i].hit && forwardFighters[i].count > 100){
+      forwardFighters.splice(i,1);
+    }
+  }
+
   sideFighters.forEach(function(tie){
     tie.draw(ctx);
     tie.grow();
@@ -236,7 +240,7 @@ function handleInput() {
     sideFighters.push(new SideFighter(false));
   }
   if (count % 200 === 0) {
-    forwardFighters.push(new TieFighter("change me"));
+    forwardFighters.push(new TieFighter());
   }
   if (sideFighters.length > 10){
     sideFighters.splice(0,5);
