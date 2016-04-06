@@ -54,6 +54,7 @@
 
 	// test data
 	// end test data
+	var score = 0;
 	var deathstar = new Image();
 	deathstar.src = "images/deathstar.png";
 	var gameOver = false;
@@ -89,6 +90,7 @@
 	  this.crossX = posX + 11;
 	  this.crossY = posY - 10;
 	}
+
 	function drawCrosshairs (){
 	  var crossX = x + 48;
 	  var crossY = y + 5;
@@ -216,11 +218,16 @@
 	  ctx.clearRect(0, 0, canvas.width, canvas.height);
 	  drawDeathstar();
 
+	  var hit = false;
 	  lazers.forEach(function(laser){
 	    laser.draw(ctx);
 	    laser.moveLazers();
-	    laser.hit(forwardFighters, ctx);
+	    hit = laser.hit(forwardFighters, ctx);
 	    laser.hit(sideFighters, ctx);
+	    if (hit){
+	      score ++;
+	    }
+	    hit = false;
 	  });
 	  for (var i = 0; i < forwardFighters.length; i++){
 	    if (forwardFighters[i].distance < 140) {
@@ -241,6 +248,8 @@
 
 	  handleInput();
 
+	  ctx.fillStyle = "white";
+	  ctx.fillText(score, 700, 10);
 
 	}
 
@@ -293,7 +302,7 @@
 	    sideFighters.splice(0,5);
 	  }
 
-	  if (lazers.length > 5){
+	  if (lazers.length > 0){
 	    lazers = [];
 	  }
 
@@ -448,8 +457,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	var score = 0;
-
+	
 
 	function FireLazers(pos, leftPressed, rightPressed, upPressed, downPressed){
 	  if (leftPressed){
@@ -520,17 +528,15 @@
 	FireLazers.prototype.hit = function(allFighters, ctx){
 	  var posX = this.posX1 + 100;
 	  var posY = this.posY + 30;
+	  var hit = false;
 	  allFighters.forEach(function(fighter){
 	    if (posX >= fighter.position[0] - 20 && posX <= fighter.position[0] + 100){
 	      if (posY >= fighter.position[1] - 20 && posY <= fighter.position[1] + 150)
 	      fighter.hit = true;
-	      if (fighter.hit === false){
-	        score ++;
-	        console.log(score);
-	      }
+	      hit = true;
 	    }
 	  });
-
+	  return hit;
 	};
 
 	module.exports = FireLazers;

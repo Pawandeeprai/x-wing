@@ -8,6 +8,7 @@ var FireLazers = require('./lazers');
 
 // test data
 // end test data
+var score = 0;
 var deathstar = new Image();
 deathstar.src = "images/deathstar.png";
 var gameOver = false;
@@ -43,6 +44,7 @@ function CrossHairs(posX, posY)  {
   this.crossX = posX + 11;
   this.crossY = posY - 10;
 }
+
 function drawCrosshairs (){
   var crossX = x + 48;
   var crossY = y + 5;
@@ -170,11 +172,16 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawDeathstar();
 
+  var hit = false;
   lazers.forEach(function(laser){
     laser.draw(ctx);
     laser.moveLazers();
-    laser.hit(forwardFighters, ctx);
+    hit = laser.hit(forwardFighters, ctx);
     laser.hit(sideFighters, ctx);
+    if (hit){
+      score ++;
+    }
+    hit = false;
   });
   for (var i = 0; i < forwardFighters.length; i++){
     if (forwardFighters[i].distance < 140) {
@@ -195,6 +202,8 @@ function draw() {
 
   handleInput();
 
+  ctx.fillStyle = "white";
+  ctx.fillText(score, 700, 10);
 
 }
 
@@ -247,7 +256,7 @@ function handleInput() {
     sideFighters.splice(0,5);
   }
 
-  if (lazers.length > 5){
+  if (lazers.length > 0){
     lazers = [];
   }
 
