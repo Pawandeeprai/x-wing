@@ -201,9 +201,9 @@ function draw() {
   drawXwing();
 
   handleInput();
-
+  ctx.font = "30px Comic Sans MS";
   ctx.fillStyle = "white";
-  ctx.fillText(score, 700, 10);
+  ctx.fillText(score, 700, 30);
 
 }
 
