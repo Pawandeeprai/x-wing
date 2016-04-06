@@ -174,6 +174,7 @@ function draw() {
     laser.draw(ctx);
     laser.moveLazers();
     laser.hit(forwardFighters, ctx);
+    laser.hit(sideFighters, ctx);
   });
   for (var i = 0; i < forwardFighters.length; i++){
     if (forwardFighters[i].distance < 140) {
